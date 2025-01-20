@@ -71,4 +71,10 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-mlkit-face-detection:17.1.0")
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    val cameraVersion = "1.3.1"
+    implementation("androidx.camera:camera-lifecycle:$cameraVersion")
+    implementation("androidx.camera:camera-camera2:$cameraVersion")
+    implementation("androidx.camera:camera-view:$cameraVersion")
+    implementation("androidx.camera:camera-core:$cameraVersion")
 }

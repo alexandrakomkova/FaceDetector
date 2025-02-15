@@ -33,6 +33,9 @@ import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 
 class MainActivity : ComponentActivity() {
 
@@ -52,8 +55,61 @@ class MainActivity : ComponentActivity() {
             FaceDetectorTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     FaceDetectionScreen()
+                    if (!allRuntimePermissionsGranted()) {
+                        getRuntimePermissions()
+                    }
                 }
             }
+        }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val PERMISSION_REQUESTS = 1
+
+        private val REQUIRED_RUNTIME_PERMISSIONS =
+            arrayOf(
+                android.Manifest.permission.CAMERA
+            )
+    }
+
+    private fun allRuntimePermissionsGranted(): Boolean {
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission.let {
+                if (!isPermissionGranted(this, it)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    private fun isPermissionGranted(context: Context, permission: String): Boolean {
+        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.i(TAG, "Permission granted: $permission")
+            return true
+        }
+        Log.i(TAG, "Permission NOT granted: $permission")
+        return false
+    }
+
+    private fun getRuntimePermissions() {
+        val permissionsToRequest = ArrayList<String>()
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission.let {
+                if (!isPermissionGranted(this, it)) {
+                    permissionsToRequest.add(permission)
+                }
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUESTS
+            )
         }
     }
 
@@ -63,13 +119,17 @@ class MainActivity : ComponentActivity() {
         var faces by remember { mutableStateOf(emptyList<Face>()) }
 
         CameraPreview { imageProxy ->
+            Log.d("detectFaces", "0")
             val inputImage = InputImage.fromMediaImage(imageProxy.image!!, imageProxy.imageInfo.rotationDegrees)
             val detectedFaces = detectFaces(inputImage)
             faces = detectedFaces
+            Log.d("detectFaces", "$faces")
             imageProxy.close()
         }
 
+        Log.d("detectFaces", "1")
         DrawContours(faces = faces)
+        Log.d("detectFaces", "3")
     }
 
     private fun detectFaces(image: InputImage): List<Face> {
@@ -77,6 +137,7 @@ class MainActivity : ComponentActivity() {
             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
             .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
             .build()
+        Log.d("detectFaces", "4")
 
         val detector = FaceDetection.getClient(options)
         val faces = detector.process(image)
@@ -107,15 +168,17 @@ class MainActivity : ComponentActivity() {
                             it.setSurfaceProvider(previewView.surfaceProvider)
                         }
 
-                    val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                    // val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                    val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
                     try {
                         cameraProvider.unbindAll()
                         cameraProvider.bindToLifecycle(
                             context as ComponentActivity, cameraSelector, preview
                         )
+                        Log.d("CameraPreview", "success")
                     } catch (exc: Exception) {
-                        // Handle exceptions
+                        Log.d("CameraPreview", "fail: ${exc.message}")
                     }
                 }, ContextCompat.getMainExecutor(context))
 

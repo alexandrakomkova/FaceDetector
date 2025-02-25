@@ -10,12 +10,14 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.google.mlkit.vision.face.Face
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class CameraManager(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
+    private val graphicOverlay: GraphicOverlay,
 ) {
     private lateinit var cameraExecutor: ExecutorService
     private var cameraSelectorOption = CameraSelector.LENS_FACING_FRONT
@@ -74,7 +76,9 @@ class CameraManager(
     }
 
     private fun selectAnalyzer(): ImageAnalysis.Analyzer {
-        return FaceContourDetectionProcessor()
+        return FaceContourDetectionProcessor(
+            graphicOverlay = graphicOverlay
+        )
     }
 
     companion object {

@@ -2,13 +2,6 @@ package com.example.facedetector.second
 
 import android.graphics.Rect
 import android.util.Log
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.unit.dp
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
@@ -17,6 +10,9 @@ import com.google.mlkit.vision.face.FaceDetectorOptions
 import java.io.IOException
 
 class FaceContourDetectionProcessor(
+    override val graphicOverlay: GraphicOverlay,
+    //private var faces: List<Face>
+    //private val view: GraphicOverlay,
     //private val onSuccessCallback: ((FaceStatus) -> Unit)
 ) : BaseImageAnalyzer<List<Face>>() {
 
@@ -39,21 +35,32 @@ class FaceContourDetectionProcessor(
         }
     }
 
-    override fun onFailure(e: Exception) {
-        Log.d(TAG, "Face Detector failed. $e")
-    }
-
-    override fun onSuccess(
-        results: List<Face>,
-        rect: Rect
-    ) {
+    override fun onSuccess(results: List<Face>, graphicOverlay: GraphicOverlay, rect: Rect) {
         Log.d(TAG, "Face Detector onSuccess.")
         if(results.isEmpty()) {
             Log.d(TAG, "Face Detector found 0 faces.")
         } else {
             Log.d(TAG, "Face Detector found faces.")
+            graphicOverlay.clear()
+            if (results.isNotEmpty()){
+                results.forEach {
+                    val faceGraphic = FaceGraphic(
+                        graphicOverlay,
+                        it,
+                        rect,
+                        //onSuccessCallback
+                        )
+                    graphicOverlay.add(faceGraphic)
+                }
+                graphicOverlay.postInvalidate()
+            }
         }
     }
+
+    override fun onFailure(e: Exception) {
+        Log.d(TAG, "Face Detector failed. $e")
+    }
+
 
     companion object {
         private const val TAG = "FaceDetectorProcessor"

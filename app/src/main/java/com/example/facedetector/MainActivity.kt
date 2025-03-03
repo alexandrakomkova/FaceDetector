@@ -22,8 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.facedetector.second.CameraManager
-import com.example.facedetector.second.GraphicOverlay
+import com.example.facedetector.camerax.CameraManager
 import com.example.facedetector.ui.theme.FaceDetectorTheme
 import com.google.mlkit.vision.face.Face
 

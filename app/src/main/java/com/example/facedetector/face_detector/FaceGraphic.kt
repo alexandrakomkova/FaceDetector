@@ -1,9 +1,10 @@
-package com.example.facedetector.second
+package com.example.facedetector.face_detector
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import com.example.facedetector.GraphicOverlay
 import com.google.mlkit.vision.face.Face
 
 

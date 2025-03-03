@@ -1,7 +1,9 @@
-package com.example.facedetector.second
+package com.example.facedetector.face_detector
 
 import android.graphics.Rect
 import android.util.Log
+import com.example.facedetector.camerax.BaseImageAnalyzer
+import com.example.facedetector.GraphicOverlay
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face

@@ -1,4 +1,4 @@
-package com.example.facedetector.second
+package com.example.facedetector
 
 import android.content.Context
 import android.content.res.Configuration
@@ -154,17 +154,4 @@ open class GraphicOverlay(context: Context?, attrs: AttributeSet?) :
             }
         }
     }
-
-//    @Override
-//    protected fun onDraw(canvas: Canvas?) {
-//        if (canvas != null) {
-//            super.onDraw(canvas)
-//        }
-//        synchronized(lock) {
-//            for (graphic in graphics) {
-//                graphic.draw(canvas)
-//            }
-//        }
-//    }
-
 }

@@ -1,4 +1,4 @@
-package com.example.facedetector.second
+package com.example.facedetector.camerax
 
 import android.content.Context
 import android.util.Log
@@ -10,7 +10,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.google.mlkit.vision.face.Face
+import com.example.facedetector.GraphicOverlay
+import com.example.facedetector.face_detector.FaceContourDetectionProcessor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

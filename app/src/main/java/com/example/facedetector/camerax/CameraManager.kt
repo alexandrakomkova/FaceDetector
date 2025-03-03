@@ -22,6 +22,9 @@ class CameraManager(
 ) {
     private lateinit var cameraExecutor: ExecutorService
     private var cameraSelectorOption = CameraSelector.LENS_FACING_FRONT
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var preview: Preview? = null
+    private var imageAnalyzer: ImageAnalysis? = null
 
     init {
         createNewExecutor()
@@ -40,7 +43,7 @@ class CameraManager(
             {
                 val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
-                val preview = Preview.Builder()
+                preview = Preview.Builder()
                     .build()
                     .also {
                         it.surfaceProvider = previewView.surfaceProvider
@@ -50,7 +53,7 @@ class CameraManager(
                     .requireLensFacing(cameraSelectorOption)
                     .build()
 
-                val imageAnalyzer = ImageAnalysis.Builder()
+                imageAnalyzer = ImageAnalysis.Builder()
                     //.setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also {
@@ -80,6 +83,38 @@ class CameraManager(
         return FaceContourDetectionProcessor(
             graphicOverlay = graphicOverlay
         )
+    }
+
+    fun changeCameraSelector() {
+
+        cameraSelectorOption =
+            if (cameraSelectorOption == CameraSelector.LENS_FACING_BACK) {
+                Log.d(TAG, "front")
+                CameraSelector.LENS_FACING_FRONT
+
+                }
+            else {
+                Log.d(TAG, "back")
+                CameraSelector.LENS_FACING_BACK
+            }
+
+        // graphicOverlay.toggleSelector()
+        // startCamera()
+
+        try {
+            cameraProvider?.unbindAll()
+            cameraProvider?.bindToLifecycle(
+                lifecycleOwner = lifecycleOwner,
+                cameraSelector = CameraSelector.Builder().requireLensFacing(cameraSelectorOption).build(),
+                preview,
+                imageAnalyzer
+            )
+            Log.d(TAG, "success")
+
+        } catch (e: Exception) {
+            Log.d(TAG, "fail: ${e.message}")
+        }
+
     }
 
     companion object {

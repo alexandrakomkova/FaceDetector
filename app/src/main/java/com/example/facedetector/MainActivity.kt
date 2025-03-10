@@ -137,6 +137,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        cameraManager.destroyCameraManager()
+    }
+
     companion object {
         private const val TAG = "MainActivity"
         private const val PERMISSION_REQUESTS = 1

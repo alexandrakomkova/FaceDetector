@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.example.facedetector.GraphicOverlay
 import com.example.facedetector.face_detector.FaceContourDetectionProcessor
+import com.google.common.util.concurrent.ListenableFuture
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -22,9 +23,11 @@ class CameraManager(
 ) {
     private lateinit var cameraExecutor: ExecutorService
     private var cameraSelectorOption = CameraSelector.LENS_FACING_FRONT
+    // private var cameraSelectorOption = CameraSelector.LENS_FACING_BACK
     private var cameraProvider: ProcessCameraProvider? = null
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
+    private var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>? = null
 
     init {
         createNewExecutor()
@@ -37,11 +40,11 @@ class CameraManager(
 
     fun startCamera(): View {
         val previewView = PreviewView(context)
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+        cameraProviderFuture = ProcessCameraProvider.getInstance(context)
 
-        cameraProviderFuture.addListener(
+        cameraProviderFuture!!.addListener(
             {
-                val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+                val cameraProvider: ProcessCameraProvider = cameraProviderFuture!!.get()
 
                 preview = Preview.Builder()
                     .build()
@@ -86,7 +89,7 @@ class CameraManager(
     }
 
     fun changeCameraSelector() {
-
+        graphicOverlay.clear()
         cameraSelectorOption =
             if (cameraSelectorOption == CameraSelector.LENS_FACING_BACK) {
                 Log.d(TAG, "front")
@@ -98,10 +101,9 @@ class CameraManager(
                 CameraSelector.LENS_FACING_BACK
             }
 
-        // graphicOverlay.toggleSelector()
-        // startCamera()
 
-        try {
+        cameraProviderFuture?.addListener({
+            val cameraProvider = cameraProviderFuture?.get()
             cameraProvider?.unbindAll()
             cameraProvider?.bindToLifecycle(
                 lifecycleOwner = lifecycleOwner,
@@ -109,12 +111,33 @@ class CameraManager(
                 preview,
                 imageAnalyzer
             )
-            Log.d(TAG, "success")
+        }, ContextCompat.getMainExecutor(context))
 
-        } catch (e: Exception) {
-            Log.d(TAG, "fail: ${e.message}")
-        }
+//        try {
+//            cameraProvider?.unbindAll()
+//            cameraProvider?.bindToLifecycle(
+//                lifecycleOwner = lifecycleOwner,
+//                cameraSelector = CameraSelector.Builder().requireLensFacing(cameraSelectorOption).build(),
+//                preview,
+//                imageAnalyzer
+//            )
+//            Log.d(TAG, "success")
+//
+//        } catch (e: Exception) {
+//            Log.d(TAG, "fail: ${e.message}")
+//        }
 
+        // startCamera()
+
+    }
+
+    private fun stopCamera() {
+        cameraProvider?.unbindAll()
+    }
+
+    fun destroyCameraManager() {
+        stopCamera()
+        cameraExecutor.shutdown()
     }
 
     companion object {

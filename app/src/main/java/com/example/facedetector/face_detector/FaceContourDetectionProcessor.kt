@@ -38,11 +38,11 @@ class FaceContourDetectionProcessor(
     }
 
     override fun onSuccess(results: List<Face>, graphicOverlay: GraphicOverlay, rect: Rect) {
-        Log.d(TAG, "Face Detector onSuccess.")
+       // Log.d(TAG, "Face Detector onSuccess.")
         if(results.isEmpty()) {
-            Log.d(TAG, "Face Detector found 0 faces.")
+            // Log.d(TAG, "Face Detector found 0 faces.")
         } else {
-            Log.d(TAG, "Face Detector found faces.")
+            // Log.d(TAG, "Face Detector found faces.")
             graphicOverlay.clear()
             if (results.isNotEmpty()){
                 results.forEach {

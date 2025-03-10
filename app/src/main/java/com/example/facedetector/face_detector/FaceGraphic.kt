@@ -10,7 +10,7 @@ import com.google.mlkit.vision.face.Face
 
 
 class FaceGraphic(
-    private val overlay: GraphicOverlay,
+    overlay: GraphicOverlay,
     private val face: Face,
     private val imageRect: Rect,
 ): GraphicOverlay.Graphic(overlay) {
@@ -44,7 +44,6 @@ class FaceGraphic(
     }
 
     override fun draw(canvas: Canvas?) {
-        // overlay.clear()
         Log.d(TAG, "draw")
         val rect = calculateRect(
             imageRect.height().toFloat(),
@@ -54,15 +53,12 @@ class FaceGraphic(
         val faceDimensions = getFaceDimensions()
         when {
             checkIsToFar(faceDimensions) -> {
-                // onSuccessCallback(FaceStatus.TOO_FAR)
                 canvas?.drawRect(rect,redBoxPaint)
             }
             checkIsNoCentered(faceDimensions) -> {
-                // onSuccessCallback(FaceStatus.NOT_CENTERED)
                 canvas?.drawRect(rect,redBoxPaint)
             }
             else -> {
-                // onSuccessCallback(FaceStatus.VALID)
                 canvas?.drawRect(rect,greenBoxPaint)
             }
         }

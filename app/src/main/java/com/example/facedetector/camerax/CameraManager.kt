@@ -23,7 +23,6 @@ class CameraManager(
 ) {
     private lateinit var cameraExecutor: ExecutorService
     private var cameraSelectorOption = CameraSelector.LENS_FACING_FRONT
-    // private var cameraSelectorOption = CameraSelector.LENS_FACING_BACK
     private var cameraProvider: ProcessCameraProvider? = null
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
@@ -112,22 +111,6 @@ class CameraManager(
                 imageAnalyzer
             )
         }, ContextCompat.getMainExecutor(context))
-
-//        try {
-//            cameraProvider?.unbindAll()
-//            cameraProvider?.bindToLifecycle(
-//                lifecycleOwner = lifecycleOwner,
-//                cameraSelector = CameraSelector.Builder().requireLensFacing(cameraSelectorOption).build(),
-//                preview,
-//                imageAnalyzer
-//            )
-//            Log.d(TAG, "success")
-//
-//        } catch (e: Exception) {
-//            Log.d(TAG, "fail: ${e.message}")
-//        }
-
-        // startCamera()
 
     }
 

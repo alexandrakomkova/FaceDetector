@@ -13,9 +13,6 @@ import java.io.IOException
 
 class FaceContourDetectionProcessor(
     override val graphicOverlay: GraphicOverlay,
-    //private var faces: List<Face>
-    //private val view: GraphicOverlay,
-    //private val onSuccessCallback: ((FaceStatus) -> Unit)
 ) : BaseImageAnalyzer<List<Face>>() {
 
     private val options = FaceDetectorOptions.Builder()
@@ -49,8 +46,7 @@ class FaceContourDetectionProcessor(
                         graphicOverlay,
                         it,
                         rect,
-                        //onSuccessCallback
-                        )
+                    )
                     graphicOverlay.add(faceGraphic)
                 }
                 graphicOverlay.postInvalidate()

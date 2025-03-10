@@ -13,9 +13,6 @@ import java.io.IOException
 
 class FaceContourDetectionProcessor(
     override val graphicOverlay: GraphicOverlay,
-    //private var faces: List<Face>
-    //private val view: GraphicOverlay,
-    //private val onSuccessCallback: ((FaceStatus) -> Unit)
 ) : BaseImageAnalyzer<List<Face>>() {
 
     private val options = FaceDetectorOptions.Builder()
@@ -31,6 +28,7 @@ class FaceContourDetectionProcessor(
 
     override fun stop() {
         try {
+            graphicOverlay.clear()
             detector.close()
         } catch (e: IOException) {
             Log.d(TAG, "Exception thrown while trying to close Face Detector: $e")
@@ -38,24 +36,20 @@ class FaceContourDetectionProcessor(
     }
 
     override fun onSuccess(results: List<Face>, graphicOverlay: GraphicOverlay, rect: Rect) {
-        Log.d(TAG, "Face Detector onSuccess.")
+        graphicOverlay.clear()
         if(results.isEmpty()) {
-            Log.d(TAG, "Face Detector found 0 faces.")
+            // Log.d(TAG, "Face Detector found 0 faces.")
         } else {
-            Log.d(TAG, "Face Detector found faces.")
-            graphicOverlay.clear()
-            if (results.isNotEmpty()){
+            // Log.d(TAG, "Face Detector found faces.")
                 results.forEach {
                     val faceGraphic = FaceGraphic(
                         graphicOverlay,
                         it,
                         rect,
-                        //onSuccessCallback
-                        )
+                    )
                     graphicOverlay.add(faceGraphic)
                 }
                 graphicOverlay.postInvalidate()
-            }
         }
     }
 

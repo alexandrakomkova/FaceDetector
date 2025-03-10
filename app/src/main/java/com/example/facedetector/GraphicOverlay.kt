@@ -36,6 +36,7 @@ open class GraphicOverlay(context: Context?, attrs: AttributeSet?) :
     var mOffsetX: Float? = null
     var mOffsetY: Float? = null
     var cameraSelector: Int = CameraSelector.LENS_FACING_FRONT
+    // var cameraSelector: Int = CameraSelector.LENS_FACING_BACK
 
     abstract class Graphic(private val overlay: GraphicOverlay) {
 
@@ -127,6 +128,7 @@ open class GraphicOverlay(context: Context?, attrs: AttributeSet?) :
     fun isFrontMode() = cameraSelector == CameraSelector.LENS_FACING_FRONT
 
     fun toggleSelector() {
+        clear()
         cameraSelector =
             if (cameraSelector == CameraSelector.LENS_FACING_BACK) CameraSelector.LENS_FACING_FRONT
             else CameraSelector.LENS_FACING_BACK

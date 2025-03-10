@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -61,16 +61,21 @@ class MainActivity : ComponentActivity() {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            AndroidView(
-                factory = {
-                    cameraManager.startCamera()
-
-                },
+            Box(
                 modifier = Modifier.fillMaxWidth().weight(1f)
-            )
-//            AndroidView(factory = {
-//                graphicOverlay
-//            }, modifier = Modifier.fillMaxWidth())
+            ) {
+                AndroidView(
+                    factory = {
+                        cameraManager.startCamera()
+
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+                AndroidView(factory = {
+                    graphicOverlay
+                }, modifier = Modifier.fillMaxSize())
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
@@ -130,6 +135,11 @@ class MainActivity : ComponentActivity() {
                 PERMISSION_REQUESTS
             )
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cameraManager.destroyCameraManager()
     }
 
     companion object {

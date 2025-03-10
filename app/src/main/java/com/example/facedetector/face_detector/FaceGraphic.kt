@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.util.Log
 import com.example.facedetector.GraphicOverlay
 import com.google.mlkit.vision.face.Face
 
@@ -43,6 +44,7 @@ class FaceGraphic(
     }
 
     override fun draw(canvas: Canvas?) {
+        Log.d(TAG, "draw")
         val rect = calculateRect(
             imageRect.height().toFloat(),
             imageRect.width().toFloat(),
@@ -51,15 +53,12 @@ class FaceGraphic(
         val faceDimensions = getFaceDimensions()
         when {
             checkIsToFar(faceDimensions) -> {
-                // onSuccessCallback(FaceStatus.TOO_FAR)
                 canvas?.drawRect(rect,redBoxPaint)
             }
             checkIsNoCentered(faceDimensions) -> {
-                // onSuccessCallback(FaceStatus.NOT_CENTERED)
                 canvas?.drawRect(rect,redBoxPaint)
             }
             else -> {
-                // onSuccessCallback(FaceStatus.VALID)
                 canvas?.drawRect(rect,greenBoxPaint)
             }
         }
@@ -102,6 +101,7 @@ class FaceGraphic(
 
     companion object {
         private const val BOX_STROKE_WIDTH = 5.0f
+        private const val TAG = "FaceGraphic"
     }
 }
 

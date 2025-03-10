@@ -4,12 +4,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.util.Log
 import com.example.facedetector.GraphicOverlay
 import com.google.mlkit.vision.face.Face
 
 
 class FaceGraphic(
-    overlay: GraphicOverlay,
+    private val overlay: GraphicOverlay,
     private val face: Face,
     private val imageRect: Rect,
 ): GraphicOverlay.Graphic(overlay) {
@@ -43,6 +44,8 @@ class FaceGraphic(
     }
 
     override fun draw(canvas: Canvas?) {
+        // overlay.clear()
+        Log.d(TAG, "draw")
         val rect = calculateRect(
             imageRect.height().toFloat(),
             imageRect.width().toFloat(),
@@ -102,6 +105,7 @@ class FaceGraphic(
 
     companion object {
         private const val BOX_STROKE_WIDTH = 5.0f
+        private const val TAG = "FaceGraphic"
     }
 }
 

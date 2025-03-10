@@ -31,6 +31,7 @@ class FaceContourDetectionProcessor(
 
     override fun stop() {
         try {
+            graphicOverlay.clear()
             detector.close()
         } catch (e: IOException) {
             Log.d(TAG, "Exception thrown while trying to close Face Detector: $e")
@@ -38,13 +39,11 @@ class FaceContourDetectionProcessor(
     }
 
     override fun onSuccess(results: List<Face>, graphicOverlay: GraphicOverlay, rect: Rect) {
-       // Log.d(TAG, "Face Detector onSuccess.")
+        graphicOverlay.clear()
         if(results.isEmpty()) {
             // Log.d(TAG, "Face Detector found 0 faces.")
         } else {
             // Log.d(TAG, "Face Detector found faces.")
-            graphicOverlay.clear()
-            if (results.isNotEmpty()){
                 results.forEach {
                     val faceGraphic = FaceGraphic(
                         graphicOverlay,
@@ -55,7 +54,6 @@ class FaceContourDetectionProcessor(
                     graphicOverlay.add(faceGraphic)
                 }
                 graphicOverlay.postInvalidate()
-            }
         }
     }
 
